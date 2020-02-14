@@ -1,8 +1,9 @@
 package com.alfonsotienda.holaspring.controller;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
-import org.aspectj.apache.bcel.classfile.Module.Require;
+import com.alfonsotienda.holaspring.model.Cliente;
+import com.alfonsotienda.holaspring.model.ClienteRepository;
+import com.alfonsotienda.holaspring.model.Factura;
+import com.alfonsotienda.holaspring.model.FacturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,48 @@ public class MainController {
         return "Hola " + name + " tienes " + edad + "años";
     }
 
+    @Autowired
+    FacturaRepository facturaRepository;
+
+    @GetMapping("creafactura")
+    @ResponseBody
+    public String creafactura(
+        @RequestParam("fecha") String fecha,
+        @RequestParam("id") Integer id,
+        @RequestParam("total") Double total
+        ) {
+            Factura factura = new Factura();
+            factura.setFecha(fecha);
+            factura.setId(id);
+            factura.setTotal(total);
+            facturaRepository.save(factura); 
+
+        return null;
+
+        }
+
+        @Autowired
+        ClienteRepository clienteRepository;
+    
+        @GetMapping("/creacliente")
+        @ResponseBody
+        public String creacliente(
+            @RequestParam("id") Integer id,
+            @RequestParam("nombre") String nombre,
+            @RequestParam("apellido") String apellido,
+            @RequestParam("telefono") String telefono
+            ) {
+                Cliente cliente = new Cliente();
+                cliente.setId(id);
+                cliente.setNombre(nombre);
+                cliente.setApellido(apellido);
+                clienteRepository.save(cliente); 
+    
+            return null;
+    
+            }
+    
+
     @GetMapping("/ingles")
     @ResponseBody
     public String helloWorld() {
@@ -33,7 +76,7 @@ public class MainController {
 
     @GetMapping("/calculadora")
     public ModelAndView calculadoraHTML() {
-        ModelAndView modelAndView = new ModelAndView("hello");
+        ModelAndView modelAndView = new ModelAndView("hello"); // Aquí va en html entre paréntesis
         modelAndView.addObject("mensaje", "");
         return modelAndView;
     }
